@@ -30,6 +30,9 @@ const authorRouter = require( './routes/authors')
 // In authors.js all routes begin with /authors
 app.use('/authors', authorRouter)
 
+const bookRouter = require( './routes/books')
+app.use('/books', bookRouter)
+
 
 
 app.listen(process.env.PORT || 3000)

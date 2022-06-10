@@ -2,6 +2,8 @@
 
 const mongoose = require('mongoose')
 
+
+//create new schema
 const authorSchema= new mongoose.Schema({   
     name: {
         type: String,
@@ -9,4 +11,6 @@ const authorSchema= new mongoose.Schema({
     }
 })
 
+
+//create a model to wrap around the schema so that we can work on it
 module.exports = mongoose.model('Author', authorSchema)

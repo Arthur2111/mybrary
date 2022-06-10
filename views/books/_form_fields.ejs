@@ -1,0 +1,43 @@
+<!-- files with _ are partials -->
+<div>
+    <label>Title</label>
+    <!-- name parameter indicates what the server will realise this input as ... res.body.name -->
+    <input type="text" name="title" value="<%= book.title%>">
+    <!-- <&=author.name%> tells the server to show whatever existing value is of author.name is and show as html when editing   -->
+</div>
+
+<div>
+    <label>Author</label>
+    <select name="author">
+        <% authors.forEach(author=> { %>
+            <!-- if author has already been selected  -->
+            <% if (author.id===book.author) { %>
+                <option selected label="<%= author.name %>" value="<%= author.id %>">
+                    <% } else { %>
+                <option label="<%= author.name %>" value="<%= author.id %>">
+                    <% } %>
+                        <% }) %>
+    </select>
+</div>
+
+<div>
+    <label>Published Date</label>
+    <input type="Date" name="publishDate"
+        value="<%= book.publishDate == null ? '' : book.publishDate.toISOString().split('T')[0] %>">
+</div>
+
+<div>
+    <label>Page Count</label>
+    <input type="number" name="pageCount" min="1" value=" <%= book.pageCount%>">
+</div>
+
+<div>
+    <label>Cover</label>
+    <!-- note that name is cover and not coverImageName as in models as it will be the file itself  -->
+    <input type="file" name="cover" > 
+</div>
+
+<div>
+    <label>Description</label>
+    <textarea name="description" cols="20" rows="10"><%= book.description %></textarea>
+</div>

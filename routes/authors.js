@@ -6,23 +6,24 @@ const Author = require('../models/author')
 
 //All Authors Route
 router.get('/', async (req, res) => {
-    let searchOptions= {}
+    let searchOptions = {}
     //a get requests sends info through the query string(at the top of the website) 
     if (req.query.name != null && req.query.name !== '') {
         searchOptions.name = new RegExp(req.query.name, 'i') // 'i' is case insensitive, regexp allows is to search for part of the name instead of needing the full name
-        
+
     }
-    try{
+    try {
         // apply a .find() method on the model Author  
         const authors = await Author.find(searchOptions)
-        res.render('authors/index', {authors: authors, searchOptions: req.query})
-    }catch{
+        res.render('authors/index', { authors: authors, searchOptions: req.query })
+    } catch {
         res.redirect('/')
     }
-    
+
 })
 
 //New Author Route
+// create a route to view the form to add a new Author then use the Post method within the form to post the data from the form to the end route in this case /authors and save it to the databasew
 router.get('/new', (req, res) => {
     res.render('authors/new', { author: new Author() })
 })
@@ -35,8 +36,7 @@ router.post('/', async (req, res) => {
     try {
         const newAuthor = await author.save()
         // res.redirect(`authors/${newAuthor.id}`)
-            res.redirect('authors')
-            console.log(`${req.body.name} has been saved under ${req.params.id}`)
+        res.redirect('authors')
     } catch {
         res.render('authors/new', {
             author: author,
