@@ -1,4 +1,5 @@
 const express = require('express')
+const author = require('../models/author')
 const router = express.Router()
 const Author = require('../models/author')
 
@@ -14,7 +15,7 @@ router.get('/', async (req, res) => {
     }
     try {
         // apply a .find() method on the model Author  
-        const authors = await Author.find(searchOptions)
+        const authors = await Author.find(searchOptions) //if find argument is empty it will indicate to show everything
         res.render('authors/index', { authors: authors, searchOptions: req.query })
     } catch {
         res.redirect('/')
@@ -32,11 +33,10 @@ router.get('/new', (req, res) => {
 router.post('/', async (req, res) => {
     const author = new Author({
         name: req.body.name
-    })
+    }) //this will return a promise
     try {
         const newAuthor = await author.save()
-        // res.redirect(`authors/${newAuthor.id}`)
-        res.redirect('authors')
+        res.redirect(`authors/${newAuthor.id}`)
     } catch {
         res.render('authors/new', {
             author: author,
@@ -44,6 +44,63 @@ router.post('/', async (req, res) => {
         })
     }
     //note you will need a middleware to receive form information to direct to the end route ( urlencoded or json)
+})
+
+//Auther details route
+router.get('/:id', (req, res) => {
+    res.send('Show Auther ' + req.params.id)
+})
+
+//Edit route
+// instead of new author we need to get the author from the database hence we need an async funtion and a try catch statement
+router.get('/:id/edit', async (req, res) => {
+    try {
+        //FindByID method is build into from mongoose library
+        const author = await Author.findById(req.params.id)
+        res.render('authors/edit', { author: author })
+    } catch {
+        res.redirect('/authors')
+    }
+
+})
+
+
+//Note from browser you can only do get and post request hence need to install a library method override
+//Edit/Update Author 
+router.put('/:id', async (req, res) => {
+    let author //define author outside try so that it is accessible to catch as well
+    try {
+        author = await Author.findById(req.params.id)
+        author.name = req.body.name //this allows you to take the updated name from the form and change the name before saving it 
+        await author.save() // we save to existing author as defined above with the id 
+        res.redirect(`/authors/${author.id}`)
+    } catch {
+        if (author == null) { //if author == null then fail to find author
+            res.redirect('/')
+        } else {
+            res.render('authors/edit', {
+                author: author,
+                errorMessage: 'error updating author'
+            })
+        }
+    }
+})
+
+
+//Delete Author
+router.delete('/:id', async (req, res) => {
+    let author //define author outside try so that it is accessible to catch as well
+    try {
+        author = await Author.findById(req.params.id) //find the author 
+        await author.remove() // we remove the author  
+        res.redirect(`/authors`)
+    } catch {
+        if (author == null) { //if author == null then fail to find author
+            res.redirect('/')
+        } else {
+            res.redirect(`/authors/${author.id}`)
+        }
+    }
 })
 
 

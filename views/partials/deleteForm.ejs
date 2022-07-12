@@ -1,0 +1,8 @@
+<!-- since we are using delete for also books we can turn the delete form into a partial  -->
+<!-- by changing the delete form into a partial you also need to ensure under actions the url is dynamic-->
+
+<!-- to use a delete method you need to create a form_______ note that in "action" you include the ?_method tag from the method-override library and set that = delete  -->
+<!-- this changes the original "method = POST" to "DELETE" and call the router.delete  -->
+<form method="POST" action="<%=url%>?_method=DELETE"> 
+    <button type="submit">Delete</button>
+</form>
